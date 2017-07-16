@@ -4,57 +4,89 @@ import routing from './main.routes';
 
 export class MainController {
   taskList = [];
-  newTask = {};
+  newTask = {
+    name: '',
+    info: '',
+    spent: 0,
+    created: '',
+    createdBy: '',
+    userid: -1,
+    edit: false
+  };
+  userList = {};
   timeTag = '';
-  userid = -1;
-
+  currentUser = {
+    id: -1,
+    role: 'user'
+  };
   constructor($http, $cookies) {
     'ngInject';
-    this.userid = $cookies.get('userid');
     this.$http = $http;
-    var now = new Date();
-    this.timeTag = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+(now.getDate()+1); 
+    this.currentUser.id = $cookies.get('userid');
+    this.currentUser.role = $cookies.get('urole');
   }
 
   $onInit() {
-    this.$http.get(`/api/tasks/member/${this.userid}`)
+    var now = new Date();
+    this.timeTag = now.getFullYear() + '-' + ( now.getMonth() + 1 ) + '-' + (now.getDate() + 1);
+    this.newTask.userid = this.currentUser.id;
+    let url = (this.currentUser.role==='admin'?'/api/users':`/api/users/${this.currentUser.id}`);
+    this.$http.get(url)
       .then(response => {
-        this.taskList = response.data;
-        for (var i = 0, len = this.taskList.length; i < len; ++i) {
-          this.taskList[i].edit = false;
+        let users = response.data;
+        for (var i=0, l=users.length;i<l; ++i) {
+          this.userList[users[i]._id]=users[i].name;//
         }
+        if(this.currentUser.role !== 'admin') {
+          this.userList[this.currentUser.id]=users.name;
+        }
+        url = (this.currentUser.role==='admin'?'/api/tasks':`/api/tasks/member/${this.currentUser.id}`);
+        this.$http.get(url)
+          .then(response => {
+            this.taskList = response.data;
+            for(let i = 0, len = this.taskList.length; i < len; ++i) {
+              this.taskList[i].edit = false;
+              this.taskList[i].createdBy = this.userList[this.taskList[i].userid];
+            }
+          });
       });
   }
 
   addTask() {
-    if(this.newTask) {
+    if(this.newTask.name !== '' || this.newTask.info !== '') {
       this.newTask.created = this.timeTag;
-      this.$http.post('/api/tasks').success(() => {
-        this.taskList.push(newTask);
-      }).error( () => {
-        alert('error');
-      })
-      this.newTask = {};
+      this.$http.post('/api/tasks', this.newTask).then(() => {
+        this.newTask.name = this.newTask.info = '';
+        this.newTask.spent = 0;
+      });
     }
   }
 
   updateTask(index) {
     this.$http.put(`/api/tasks/${this.taskList[index]._id}`, this.taskList[index])
-    .then(response => {
+    .then(() => {
       this.toggleEdit(index);
-    })  ;
+    });
   }
 
   deleteTask(index) {
     this.$http.delete(`/api/tasks/${this.taskList[index]._id}`)
-    .then(response => {
+    .then(() => {
       this.taskList.splice(index, 1);
     });
   }
 
-  toggleEdit (index) {
+  toggleEdit(index) {
     console.log(index);
     this.taskList[index].edit = !this.taskList[index].edit;
+  }
+
+  canEdit(index) {
+    let now = new Date();
+    let created = new Date(this.taskList[index].created);
+    return now.getFullYear() == created.getFullYear()
+    && now.getMonth() == created.getMonth()
+    && now.getDate() == created.getDate();
   }
 }
 

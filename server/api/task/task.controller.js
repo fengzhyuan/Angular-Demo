@@ -67,7 +67,11 @@ function handleError(res, statusCode) {
 
 // Gets a list of Tasks
 export function index(req, res) {
-  return Task.findAll()
+  return Task.findAll({
+    order: [
+      ['created', 'DESC']
+    ]
+  })
     .then(respondWithResult(res))
     .catch(handleError(res));
 }
@@ -77,7 +81,10 @@ export function indexUser(req, res) {
   return Task.findAll({
     where: {
       userid: req.param('userid')
-    }
+    },
+    order: [
+      ['created', 'DESC']
+    ]
   })
     .then(respondWithResult(res))
     .catch(handleError(res));
@@ -103,7 +110,6 @@ export function create(req, res) {
 
 // Upserts the given Task in the DB at the specified ID
 export function update(req, res) {
-
   return Task.update(req.body, {
     where: {
       _id: req.params.id

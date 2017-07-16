@@ -55,7 +55,7 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
         .then(user => {
           safeCb(callback)(null, user);
           $cookies.put('userid', user._id);
-
+          $cookies.put('urole', user.role);
           return user;
         })
         .catch(err => {

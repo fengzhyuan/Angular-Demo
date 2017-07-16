@@ -1,6 +1,7 @@
 <header class="hero-unit" id="banner">
   <div class="container">
-    <img src="assets/images/yeoman.png" alt="I'm Yeoman">
+    <!--<img src="assets/images/yeoman.png" alt="I'm Yeoman">-->
+    
   </div>
 </header>
 
@@ -20,9 +21,10 @@
     <thead>
       <th>Name</th>
       <th>Description</th>
-      <th>Created</th>
-      <th>Time Spent</th>
-      <th style="white-space:no-wrap;"></th>
+      <th>Created At</th>
+      <th>Created By</th>
+      <th>Spent/H</th>
+      <th>Edit</th>
     </thead>
     <tbody>
       <tr ng-repeat="task in $ctrl.taskList">
@@ -32,29 +34,38 @@
         <td ng-hide="task.edit">{{task.info}}</td>
         <td ng-show="task.edit"><input type="text" ng-model="task.info"></td>
  
-        <td ng-hide="task.edit">{{task.created}}</td>
-        <td ng-show="task.edit">{{task.created}}</td>
+        <td>{{task.created}}</td>
         
+        <td>{{task.createdBy}}</td>
+
         <td ng-hide="task.edit">{{task.spent}}</td>
         <td ng-show="task.edit"><input type="text" ng-model="task.spent"></td>
         
         <td ng-hide="task.edit">
-          <button class="btn btn-success" ng-click="$ctrl.toggleEdit($index)">Edit</button>
-          <button class="btn btn-danger" ng-click="$ctrl.deleteTask($index)">Delete</button>
+          <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-success" ng-disabled="!$ctrl.canEdit($index)" ng-click="$ctrl.toggleEdit($index)">Edit</button>
+            <button type="button" class="btn btn-secondary" ng-disabled="!$ctrl.canEdit($index)" ng-click="$ctrl.deleteTask($index)">Delete</button>
+          </div>
         </td>
         <td ng-show="task.edit">
-          <button class="btn btn-primary" ng-click="$ctrl.updateTask($index)">Save</button>
-          <button class="btn btn-danger" ng-click="$ctrl.toggleEdit($index)">Cancel</button>
+          <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-primary" ng-click="$ctrl.updateTask($index)">Save</button>
+            <button type="button" class="btn btn-danger" ng-click="$ctrl.toggleEdit($index)">Cancel</button>
+          </div>
         </td>
       </tr>
     </tbody>
     <tr>
-      <td><input type="text" ng-model="$ctrl.ewTask.name"></td>
+      <td><input type="text" ng-model="$ctrl.newTask.name"></td>
       <td><input type="text" ng-model="$ctrl.newTask.info"></td>
       <td><input type="text" disabled ng-model="$ctrl.timeTag"</td>
-      <td><input type="text" ng-model="$ctrl.newTask.spent"></td>
+      <td><input type="number" ng-model="$ctrl.newTask.spent" ng-min="0" min=0 max=24></td>
       <td>
         <button class="btn btn-primary" ng-click="$ctrl.addTask()">Add New</button>
       </td>
     </tr>
   </table>
+
+  <style>
+  .btn-group{display:flex;}
+  </style>

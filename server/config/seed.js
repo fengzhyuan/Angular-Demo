@@ -12,7 +12,7 @@ export default function seedDatabaseIfNeeded() {
     let Thing = sqldb.Thing;
     let User = sqldb.User;
 
-    return Thing.destroy({ where: {} })
+    Thing.destroy({ where: {} })
       .then(() => {
         let thing = Thing.bulkCreate([{
           name: 'Development Tools',

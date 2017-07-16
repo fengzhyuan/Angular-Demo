@@ -110,16 +110,16 @@ export default function(sequelize, DataTypes) {
           return this.password === this.encryptPassword(password);
         }
 
-        var _this = this;
+        let that = this;
         this.encryptPassword(password, function(err, pwdGen) {
           if(err) {
-            callback(err);
+            callback(err); return false;
           }
 
-          if(_this.password === pwdGen) {
-            callback(null, true);
+          if(that.password === pwdGen) {
+            callback(null, true); return true;
           } else {
-            callback(null, false);
+            callback(null, false); return false;
           }
         });
       },

@@ -19,10 +19,10 @@ var events = {
 };
 
 // Register the event emitter to the model events
-function registerEvents(Task) {
+function registerEvents(task) {
   for(var e in events) {
     let event = events[e];
-    Task.hook(e, emitEvent(event));
+    task.hook(e, emitEvent(event));
   }
 }
 
