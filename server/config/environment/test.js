@@ -9,10 +9,9 @@ module.exports = {
     uri: 'mongodb://localhost/demo-test'
   },
   sequelize: {
-    uri: 'sqlite://',
+    uri: 'postgres://postgres:postgres@localhost:5432/dev.pean',
     options: {
       logging: false,
-      storage: 'test.sqlite',
       define: {
         timestamps: false
       }

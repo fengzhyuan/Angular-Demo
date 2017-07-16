@@ -4,8 +4,8 @@ import routing from './main.routes';
 
 export class MainController {
 
-  awesomeThings = [];
-  newThing = '';
+  taskList = [];
+  newTask = '';
 
   /*@ngInject*/
   constructor($http) {
@@ -13,23 +13,23 @@ export class MainController {
   }
 
   $onInit() {
-    this.$http.get('/api/things')
+    this.$http.get('/api/tasks')
       .then(response => {
-        this.awesomeThings = response.data;
+        this.taskList = response.data;
       });
   }
 
   addThing() {
-    if(this.newThing) {
-      this.$http.post('/api/things', {
-        name: this.newThing
+    if(this.newTask) {
+      this.$http.post('/api/tasks', {
+        name: this.newTask
       });
-      this.newThing = '';
+      this.newTask = '';
     }
   }
 
-  deleteThing(thing) {
-    this.$http.delete(`/api/things/${thing._id}`);
+  deleteThing(task) {
+    this.$http.delete(`/api/tasks/${task._id}`);
   }
 }
 
