@@ -6,11 +6,12 @@ var proxyquire = require('proxyquire').noPreserveCache();
 
 var taskCtrlStub = {
   index: 'taskCtrl.index',
+  indexUser: 'taskCtrl.indexUser',
   show: 'taskCtrl.show',
   create: 'taskCtrl.create',
-  upsert: 'taskCtrl.upsert',
+  update: 'taskCtrl.update',
   patch: 'taskCtrl.patch',
-  destroy: 'taskCtrl.destroy'
+  delete: 'taskCtrl.delete'
 };
 
 var routerStub = {
@@ -36,7 +37,7 @@ describe('Task API Router:', function() {
     taskIndex.should.equal(routerStub);
   });
 
-  describe('GET /api/tasks/admin', function() {
+  describe('GET /api/tasks', function() {
     it('should route to task.controller.index', function() {
       routerStub.get
         .withArgs('/', 'taskCtrl.index')
@@ -44,10 +45,10 @@ describe('Task API Router:', function() {
     });
   });
 
-  describe('GET /api/tasks/nonadmin/:userid', function() {
+  describe('GET /api/tasks/member/:userid', function() {
     it('should route to task.controller.indexUser', function() {
       routerStub.get
-        .withArgs('/:userid', 'taskCtrl.index')
+        .withArgs('/:userid', 'taskCtrl.indexUser')
         .should.have.been.calledOnce;
     });
   });
@@ -69,9 +70,9 @@ describe('Task API Router:', function() {
   });
 
   describe('PUT /api/tasks/:id', function() {
-    it('should route to task.controller.upsert', function() {
+    it('should route to task.controller.update', function() {
       routerStub.put
-        .withArgs('/:id', 'taskCtrl.upsert')
+        .withArgs('/:id', 'taskCtrl.update')
         .should.have.been.calledOnce;
     });
   });
