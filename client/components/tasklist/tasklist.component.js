@@ -1,23 +1,57 @@
+// 'use strict';
+// /* eslint no-sync: 0 */
+
+// import angular from 'angular';
+
+// export class NavbarComponent {
+//   menu = [{
+//     title: 'Home',
+//     link: '/'
+//   }];
+
+//   isCollapsed = true;
+
+//   constructor($location, Auth) {
+//     'ngInject';
+
+//     this.$location = $location;
+//     this.isLoggedIn = Auth.isLoggedInSync;
+//     this.isAdmin = Auth.isAdminSync;
+//     this.getCurrentUser = Auth.getCurrentUserSync;
+//   }
+
+//   isActive(route) {
+//     return route === this.$location.path();
+//   }
+// }
+
+// export default angular.module('directives.navbar', [])
+//   .component('navbar', {
+//     template: require('./navbar.html'),
+//     controller: NavbarComponent
+//   })
+//   .name;
 import angular from 'angular';
 const ngRoute = require('angular-route');
-import routing from './main.routes';
 
-export class MainController {
+export class TaskListController {
   taskList = [];
   newTask = {};
   timeTag = '';
-  userid = -1;
+  user = {};
 
-  constructor($http, $cookies) {
+  constructor($http, Auth) {
     'ngInject';
-    this.userid = $cookies.get('userid');
+
     this.$http = $http;
+    this.Auth = Auth;
     var now = new Date();
     this.timeTag = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+(now.getDate()+1); 
   }
 
   $onInit() {
-    this.$http.get(`/api/tasks/member/${this.userid}`)
+    this.user = this.Auth.getCurrentUser();
+    this.$http.get(`/api/tasks/member/${this.user._id}`)
       .then(response => {
         this.taskList = response.data;
         for (var i = 0, len = this.taskList.length; i < len; ++i) {
@@ -58,10 +92,9 @@ export class MainController {
   }
 }
 
-export default angular.module('demoApp.main', [ngRoute])
-  .config(routing)
-  .component('main', {
-    template: require('./main.html'),
-    controller: MainController
+export default angular.module('demoApp.tasklist', [ngRoute])
+  .component('tasklist', {
+    template: require('./tasklist.html'),
+    controller: TaskListController
   })
   .name;

@@ -4,7 +4,7 @@
  * POST    /api/tasks              ->  create
  * GET     /api/tasks/:id          ->  show
  * GET     /api/tasks/:user        ->  indexUser
- * PUT     /api/tasks/:id          ->  upsert
+ * PUT     /api/tasks/:id          ->  update
  * PATCH   /api/tasks/:id          ->  patch
  * DELETE  /api/tasks/:id          ->  destroy
  */
@@ -102,12 +102,9 @@ export function create(req, res) {
 }
 
 // Upserts the given Task in the DB at the specified ID
-export function upsert(req, res) {
-  if(req.body._id) {
-    Reflect.deleteProperty(req.body, '_id');
-  }
+export function update(req, res) {
 
-  return Task.upsert(req.body, {
+  return Task.update(req.body, {
     where: {
       _id: req.params.id
     }

@@ -49,10 +49,13 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
         .then(res => {
           $cookies.put('token', res.data.token);
           currentUser = User.get();
+
           return currentUser.$promise;
         })
         .then(user => {
           safeCb(callback)(null, user);
+          $cookies.put('userid', user._id);
+
           return user;
         })
         .catch(err => {
