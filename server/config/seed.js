@@ -29,19 +29,22 @@ export default function seedDatabaseIfNeeded() {
       .catch(err => console.log('error populating things', err));
 
     User.destroy({ where: {} })
-      .then(() => User.bulkCreate([{
-        provider: 'local',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'test'
-      }, {
-        provider: 'local',
-        role: 'admin',
-        name: 'Admin',
-        email: 'admin@example.com',
-        password: 'admin'
-      }])
+      .then(() => {
+        let user = User.bulkCreate([{
+          provider: 'local',
+          name: 'Test User',
+          email: 'test@example.com',
+          password: 'test'
+        }, {
+          provider: 'local',
+          role: 'admin',
+          name: 'Admin',
+          email: 'admin@example.com',
+          password: 'admin'
+        }]);
+      return user;
+      })
         .then(() => console.log('finished populating users'))
-        .catch(err => console.log('error populating users', err)));
+        .catch(err => console.log('error populating users', err));
   }
 }
