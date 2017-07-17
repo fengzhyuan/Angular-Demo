@@ -42,7 +42,7 @@ export default function seedDatabaseIfNeeded() {
           email: 'admin@example.com',
           password: 'admin'
         }]);
-      return user;
+        return user;
       })
         .then(() => console.log('finished populating users'))
         .catch(err => console.log('error populating users', err));

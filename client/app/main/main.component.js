@@ -30,21 +30,21 @@ export class MainController {
     var now = new Date();
     this.timeTag = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + (now.getDate() + 1);
     this.newTask.userid = this.currentUser.id;
-    let url = (this.currentUser.role==='admin' ? '/api/users' : `/api/users/${this.currentUser.id}`);
+    let url = (this.currentUser.role === 'admin' ? '/api/users' : `/api/users/${this.currentUser.id}`);
     this.$http.get(url)
       .then(response => {
         let users = response.data;
         for(var i = 0, l = users.length; i < l; ++i) {
-          this.userList[users[i]._id]=users[i].name;//
+          this.userList[users[i]._id] = users[i].name;//
         }
         if(this.currentUser.role !== 'admin') {
           this.userList[this.currentUser.id] = users.name;
         }
-        url = (this.currentUser.role === 'admin'?'/api/tasks' : `/api/tasks/member/${this.currentUser.id}`);
+        url = (this.currentUser.role === 'admin' ? '/api/tasks' : `/api/tasks/member/${this.currentUser.id}`);
         this.$http.get(url)
           .then(response1 => {
             this.taskList = response1.data;
-            for(let i = 0, len = this.taskList.length; i < len; ++i) {
+            for(i = 0, l = this.taskList.length; i < l; ++i) {
               this.taskList[i].edit = false;
               this.taskList[i].createdBy = this.userList[this.taskList[i].userid];
             }

@@ -20,8 +20,7 @@ module.exports = {
       dialectOptions: {
         ssl: true
       }
-    },
-    ssl:true
+    }
   },
   seedDB: false
 };
